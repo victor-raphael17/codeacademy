@@ -29,7 +29,9 @@ const	play = document.getElementById('play'),
   previous = document.getElementById('previous'),
   next = document.getElementById('next'),
   shuffle = document.getElementById('shuffle'),
-  repeat = document.getElementById('repeat');
+  repeat = document.getElementById('repeat'),
+  progressContainer = document.getElementById('progress-container'),
+  progress = document.getElementById('progress');
 
 // Play/Pause state
 let isSongPlaying = false;
@@ -59,7 +61,7 @@ function togglePlayPause() {
 	}
 };
 
-function initializePlayer() {
+function refreshPlayer() {
   cover.src = `songs/cover/${playlist[playlistIndex].file}.png`;
   song.src = `songs/audio/${playlist[playlistIndex].file}.mp3`;
   songName.innerText = playlist[playlistIndex].name;
@@ -67,25 +69,44 @@ function initializePlayer() {
 };
 
 function playPreviousSong() {
-  if (playlistIndex < 0) {
+  if (playlistIndex === 0) {
     playlistIndex = playlist.length - 1;
+  } else {
+    playlistIndex -= 1;
   }
-  playlistIndex -= 1;
-  togglePlayPause();
+  refreshPlayer();
+  playSong();
 };
 
 function playNextSong() {
-  if (playlistIndex >= (playlist.length - 1)) {
+  if (playlistIndex === (playlist.length - 1)) {
     playlistIndex = 0;
+  } else {
+    playlistIndex += 1;
   }
-  playlistIndex += 1;
-  togglePlayPause();
+  refreshPlayer();
+  playSong();
 };
 
-initializePlayer();
+function updateProgressBar() {
+  const barWidth = (song.currentTime / song.duration) * 100;
+  progress.style.setProperty('--progress', `${barWidth}%`);
+}
 
+function jumpToTime(event) {
+  const width = progressContainer.clientWidth,
+    clickX = event.offsetX,
+    newTime = (clickX / width) * song.duration;
+    song.currentTime = newTime;
+  }
+
+// Automatically runned
+refreshPlayer();
 play.addEventListener('click', togglePlayPause);
+song.addEventListener('timeupdate', updateProgressBar);
+song.addEventListener('ended', playNextSong);
+
+// User interactions
 previous.addEventListener('click', playPreviousSong);
 next.addEventListener('click', playNextSong);
-shuffle.addEventListener('click', );
-repeat.addEventListener('click', );
+progressContainer.addEventListener('click', jumpToTime);

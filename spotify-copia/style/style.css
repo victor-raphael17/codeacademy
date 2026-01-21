@@ -48,6 +48,7 @@ button:active {
 }
 
 #cover {
+  height: 375px;
   width: 375px;
 }
 
@@ -66,14 +67,21 @@ button:active {
   height: 3px;
   background-color: gray;
   border-radius: 20px;
-  margin: 2em 0;
+}
+
+#progress-container {
+  width: 375px;
+  cursor: pointer;
+  margin: 1em 0;
+  padding: 1em 0;
 }
 
 #progress {
+  --progress: 0%;
   height: inherit;
   background-color: white;
   border-radius: inherit;
-  width: 50%;
+  width: var(--progress);
 }
 
 .bi {
