@@ -1,0 +1,92 @@
+body {
+  background-image: linear-gradient(
+        rgb(59,88,93),
+        rgb(29,40,42)
+    );
+    height: 100vh;
+    color: white;
+    font-family: sans-serif;
+    display: flex; /* Deixa o site responsivo */
+    flex-direction: column; /* Organiza os elementos em colunas */
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+div {
+  line-height: 1;
+}
+
+button {
+  font-size: 1.75em;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: scale(1.15);
+}
+
+button:active {
+  color: gray;
+}
+
+#below-cover {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2em;
+}
+
+#button-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#play-button {
+  font-size: 4em; 
+}
+
+#cover {
+  width: 375px;
+}
+
+#playlist-name {
+  text-align: center;
+  font-size: 1em;
+  margin: 1em 0 2em;
+}
+
+#song-name {
+  font-size: 1.75em;
+  font-weight: bold;
+}
+
+#progress-bar {
+  height: 3px;
+  background-color: gray;
+  border-radius: 20px;
+  margin: 2em 0;
+}
+
+#progress {
+  height: inherit;
+  background-color: white;
+  border-radius: inherit;
+  width: 50%;
+}
+
+.bi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.low-opacity {
+  opacity: 0.6;
+}
+
+.navigate {
+  font-size: 3em;
+}
