@@ -95,8 +95,6 @@ function refreshPlayer() {
   song.src = `songs/audio/${playlist[playlistIndex].file}.mp3`;
   songName.innerText = playlist[playlistIndex].name;
   artist.innerText = playlist[playlistIndex].artist;
-  playSong();
-  pauseSong();
 
 };
 
@@ -240,9 +238,12 @@ function toggleRepeat() {
 
 }
 
-function formatTime(seconds) {
+function formatTime(secondsWithDecimals) {
 
-  return Math.floor(seconds / 60);
+  const minutes = Math.floor(secondsWithDecimals / 60), 
+    secs = Math.floor(secondsWithDecimals % 60);
+
+  return `${minutes}:${secs < 10 ? '0':''}${secs}`;
 
 }
 
@@ -260,8 +261,8 @@ function updateSongDuration() {
 
 // Automatically runned
 refreshPlayer();
-updateSongDuration();
 
+song.addEventListener('loadedmetadata', updateSongDuration);
 song.addEventListener('timeupdate', updateProgressBar);
 song.addEventListener('timeupdate', updateSongTime);
 song.addEventListener('ended', repeatOrNextSong);
