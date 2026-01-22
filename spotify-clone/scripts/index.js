@@ -32,25 +32,26 @@ const nutshell = {
 
 let playlist = [...defaultPlaylist];
 
-const playlistSongsContainer = document.getElementById('playlist-songs');
-
 // Song info elements
 const songName = document.getElementById('song-name'),
   artist = document.getElementById('artist'),
 	song = document.getElementById('song'),
-  cover = document.getElementById('cover')
+  cover = document.getElementById('cover'),
+  currentTime = document.getElementById('current-time'),
+  duration = document.getElementById('duration');
 
 // Player control elements
 const	play = document.getElementById('play'),
-  previous = document.getElementById('previous'),
-  next = document.getElementById('next'),
-  shuffle = document.getElementById('shuffle'),
-  repeat = document.getElementById('repeat'),
+  previousButton = document.getElementById('previous'),
+  nextButton = document.getElementById('next'),
+  shuffleButton = document.getElementById('shuffle'),
+  repeatButton = document.getElementById('repeat'),
   progressContainer = document.getElementById('progress-container'),
   progress = document.getElementById('progress');
 
 // Song state variables
-let isSongPlaying = false;
+let isSongPlaying = false,
+  repeat = false;
 
 // Playlist state variables
 let playlistIndex = 0,
@@ -94,6 +95,8 @@ function refreshPlayer() {
   song.src = `songs/audio/${playlist[playlistIndex].file}.mp3`;
   songName.innerText = playlist[playlistIndex].name;
   artist.innerText = playlist[playlistIndex].artist;
+  playSong();
+  pauseSong();
 
 };
 
@@ -113,13 +116,32 @@ function playPreviousSong() {
 
 };
 
-function playNextSong() {
+function repeatOrNextSong() {
 
-  if (playlistIndex === (playlist.length - 1)) {
-    playlistIndex = 0;
+  if (repeat) {
+
+    playSong();
+
   } else {
+
+    playNextSong();
+
+  }
+
+};
+
+function playNextSong() {
+  
+  // If the user is in the last music, the index restarts
+  if (playlistIndex === (playlist.length - 1)) {
+    
+    playlistIndex = 0;
+  
+  } else {
+    
     playlistIndex += 1;
   }
+
   refreshPlayer();
   playSong();
 
@@ -143,72 +165,111 @@ function jumpToTime(event) {
 
 function shuffleArray() {
 
-  let index = 0,
+  // index 0 is already set (the music that's playing), so we start from 1
+  // auxPlaylist is a copy of defaultPlaylist to avoid modifying it
+  // playlist is the playlist that's being played
+  let index = 1,
     auxPlaylist = [...defaultPlaylist];
 
-  console.log("before loop", playlist, defaultPlaylist, auxPlaylist);
-
+  // Set the current playing song as first in playlist
   playlist[0] = playlist[playlistIndex];
-
-  auxPlaylist.splice(playlistIndex, 1);
   
-  index += 1;
+  // Remove the current playing song from auxPlaylist, so it won't be picked again
+  auxPlaylist.splice(playlistIndex, 1);
 
+  // loop to fill the rest of playlist with random songs from auxPlaylist
   while (index < defaultPlaylist.length) {
 
+    // pick a random index from auxPlaylist
     let randomIndex = Math.floor(Math.random() * auxPlaylist.length);
 
+    // set the picked song in playlist at current index
     playlist[index] = auxPlaylist[randomIndex]
-    index += 1;
+    
+    // remove the picked song from auxPlaylist, so it won't be picked again
     auxPlaylist.splice(randomIndex, 1);
-
+    
+    index += 1;
   }
 
-  console.log("playing playlist", playlist);
+}
+
+function addActiveClass(button) {
+
+  button.classList.add('active');
+
+}
+
+function removeActiveClass(button) {
+
+  button.classList.remove('active');
 
 }
 
 function toggleShuffle() {
+
   if (!isShuffled) {
+
     isShuffled = true;
+    addActiveClass(shuffleButton);
     shuffleArray();
-    shuffle.classList.add('active');
+
   } else {
+  
     isShuffled = false;
+    removeActiveClass(shuffleButton);
     playlist = [...defaultPlaylist];
-    shuffle.classList.remove('active');
+  
   }
+
 }
 
-function nextSongs() {
+function toggleRepeat() {
 
-  for (let i = 1; i < playlist.length; i++) {
-    const songDiv = document.createElement('div');
-    songDiv.classList.add('next-song');
+  if (!repeat) {
 
-    const songTitle = document.createElement('h2');
-    songTitle.innerText = playlist[i].name;
-    songDiv.appendChild(songTitle);
+    repeat = true;
+    addActiveClass(repeatButton);
+  
+  } else {
+  
+    repeat = false;
+    removeActiveClass(repeatButton);
 
-    const songArtist = document.createElement('p');
-    songArtist.innerText = playlist[i].artist;
-    songDiv.appendChild(songArtist);
-
-    playlistSongsContainer.appendChild(songDiv);
   }
+
+}
+
+function formatTime(seconds) {
+
+  return Math.floor(seconds / 60);
+
+}
+
+function updateSongTime() {
+
+  currentTime.innerText = formatTime(song.currentTime);
+
+}
+
+function updateSongDuration() {
+
+  duration.innerText = formatTime(song.duration);
 
 }
 
 // Automatically runned
 refreshPlayer();
-nextSongs();
+updateSongDuration();
 
-play.addEventListener('click', togglePlayPause);
 song.addEventListener('timeupdate', updateProgressBar);
-song.addEventListener('ended', playNextSong);
+song.addEventListener('timeupdate', updateSongTime);
+song.addEventListener('ended', repeatOrNextSong);
 
 // User interactions
-previous.addEventListener('click', playPreviousSong);
-next.addEventListener('click', playNextSong);
+play.addEventListener('click', togglePlayPause);
+previousButton.addEventListener('click', playPreviousSong);
+nextButton.addEventListener('click', playNextSong);
 progressContainer.addEventListener('click', jumpToTime);
-shuffle.addEventListener('click', toggleShuffle);
+shuffleButton.addEventListener('click', toggleShuffle);
+repeatButton.addEventListener('click', toggleRepeat);

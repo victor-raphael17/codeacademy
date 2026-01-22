@@ -30,14 +30,11 @@ button:active {
   color: gray;
 }
 
-#playlist-songs-title {
-  margin-top: 2em;
-  font-size: 1.25em;
-  font-weight: bolder;
-}
-
-#player {
-  margin: 5em;
+#time-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3em;
+  font-size: .85em;
 }
 
 #main-content {
@@ -49,12 +46,12 @@ button:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2em;
+  margin-top: 1.75em;
 }
 
 #button-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
