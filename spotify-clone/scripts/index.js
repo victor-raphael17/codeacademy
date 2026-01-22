@@ -1,34 +1,8 @@
 // Playlist elements
-const nutshell = {
 
-  name: 'Nutshell',
-  artist: 'Alice In Chains',
-  file: 'nutshell'
-
-}, one_last_breath = {
-
-  name: 'One Last Breath',
-  artist: 'Creed',
-  file: 'one_last_breath'
-
-}, the_kids_arent_alright = {
-  name: 'The Kids Aren\'t Alright',
-  artist: 'The Offspring',
-  file: 'the_kids_arent_alright'
-
-}, toxicity = {
-
-  name: 'Toxicity',
-  artist: 'System Of A Down',
-  file: 'toxicity'
-
-}, savin_me = {
-
-  name: 'Savin\' Me',
-  artist: 'Nickelback',
-  file: 'savin_me'
-
-}, defaultPlaylist = [nutshell, one_last_breath, the_kids_arent_alright, toxicity, savin_me];
+const jsonData = JSON.parse('/songs/songs.json');
+console.log(jsonData);
+const defaultPlaylist = [nutshell, one_last_breath, the_kids_arent_alright, toxicity, savin_me];
 
 let playlist = [...defaultPlaylist];
 
@@ -47,7 +21,8 @@ const	play = document.getElementById('play'),
   shuffleButton = document.getElementById('shuffle'),
   repeatButton = document.getElementById('repeat'),
   progressContainer = document.getElementById('progress-container'),
-  progress = document.getElementById('progress');
+  progress = document.getElementById('progress'),
+  likeButton = document.getElementById('like');
 
 // Song state variables
 let isSongPlaying = false,
@@ -259,6 +234,17 @@ function updateSongDuration() {
 
 }
 
+function toggleLike() {
+}
+
+function likeMusic() {
+
+  addActiveClass(likeButton);
+  likeButton.querySelector('i').classList.remove('bi-heart');
+  likeButton.querySelector('i').classList.add('bi-heart-fill');
+
+}
+
 // Automatically runned
 refreshPlayer();
 
@@ -274,3 +260,4 @@ nextButton.addEventListener('click', playNextSong);
 progressContainer.addEventListener('click', jumpToTime);
 shuffleButton.addEventListener('click', toggleShuffle);
 repeatButton.addEventListener('click', toggleRepeat);
+likeButton.addEventListener('click', likeMusic);

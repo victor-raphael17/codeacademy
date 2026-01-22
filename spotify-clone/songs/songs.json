@@ -1,0 +1,27 @@
+{
+  "nutshell": {
+    "name": "Nutshell",
+    "artist": "Alice In Chains",
+    "file": "nutshell"
+  },
+  "one_last_breath": {
+    "name": "One Last Breath",
+    "artist": "Creed",
+    "file": "one_last_breath"
+  },
+  "the_kids_arent_alright": {
+    "name": "The Kids Aren't Alright",
+    "artist": "The Offspring",
+    "file": "the_kids_arent_alright"
+  },
+  "toxicity": {
+    "name": "Toxicity",
+    "artist": "System Of A Down",
+    "file": "toxicity"
+  },
+  "savin_me": {
+    "name": "Savin' Me",
+    "artist": "Nickelback",
+    "file": "savin_me"
+  }
+}
