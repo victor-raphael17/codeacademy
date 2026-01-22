@@ -1,66 +1,34 @@
-// Playlist elements
-
-const jsonData = JSON.parse('/songs/songs.json');
-console.log(jsonData);
-const defaultPlaylist = [nutshell, one_last_breath, the_kids_arent_alright, toxicity, savin_me];
-
-let playlist = [...defaultPlaylist];
-
-// Song info elements
-const songName = document.getElementById('song-name'),
-  artist = document.getElementById('artist'),
-	song = document.getElementById('song'),
-  cover = document.getElementById('cover'),
-  currentTime = document.getElementById('current-time'),
-  duration = document.getElementById('duration');
-
-// Player control elements
-const	play = document.getElementById('play'),
-  previousButton = document.getElementById('previous'),
-  nextButton = document.getElementById('next'),
-  shuffleButton = document.getElementById('shuffle'),
-  repeatButton = document.getElementById('repeat'),
-  progressContainer = document.getElementById('progress-container'),
-  progress = document.getElementById('progress'),
-  likeButton = document.getElementById('like');
-
-// Song state variables
-let isSongPlaying = false,
-  repeat = false;
-
-// Playlist state variables
-let playlistIndex = 0,
-  isShuffled = false;
+// Player control functions
 
 function playSong() {
 
-	play.querySelector('i').classList.remove('bi-play-circle-fill');
-	play.querySelector('i').classList.add('bi-pause-circle-fill');
-	song.play()
-	isSongPlaying = true;
+  play.querySelector('i').classList.remove('bi-play-circle-fill');
+  play.querySelector('i').classList.add('bi-pause-circle-fill');
+  song.play()
+  isSongPlaying = true;
 
 };
 
 function pauseSong() {
 
-	play.querySelector('i').classList.remove('bi-pause-circle-fill');
-	play.querySelector('i').classList.add('bi-play-circle-fill');
-	song.pause()
-	isSongPlaying = false;
+  play.querySelector('i').classList.remove('bi-pause-circle-fill');
+  play.querySelector('i').classList.add('bi-play-circle-fill');
+  song.pause()
+  isSongPlaying = false;
 
 };
 
 function togglePlayPause() {
 
-	if (isSongPlaying) {
+  if (isSongPlaying) {
 
-		pauseSong();
+    pauseSong();
 
-	} else {
+  } else {
 
-		playSong();
+    playSong();
 
-	}
+  }
 
 };
 
@@ -70,6 +38,7 @@ function refreshPlayer() {
   song.src = `songs/audio/${playlist[playlistIndex].file}.mp3`;
   songName.innerText = playlist[playlistIndex].name;
   artist.innerText = playlist[playlistIndex].artist;
+  playlistTitleElement.innerText = playlistTitle;
 
 };
 
@@ -86,20 +55,6 @@ function playPreviousSong() {
 
   refreshPlayer();
   playSong();
-
-};
-
-function repeatOrNextSong() {
-
-  if (repeat) {
-
-    playSong();
-
-  } else {
-
-    playNextSong();
-
-  }
 
 };
 
@@ -120,12 +75,19 @@ function playNextSong() {
 
 };
 
-function updateProgressBar() {
+function repeatOrNextSong() {
 
-  const barWidth = (song.currentTime / song.duration) * 100;
-  progress.style.setProperty('--progress', `${barWidth}%`);
+  if (repeat) {
 
-}
+    playSong();
+
+  } else {
+
+    playNextSong();
+
+  }
+
+};
 
 function jumpToTime(event) {
 
@@ -167,18 +129,6 @@ function shuffleArray() {
 
 }
 
-function addActiveClass(button) {
-
-  button.classList.add('active');
-
-}
-
-function removeActiveClass(button) {
-
-  button.classList.remove('active');
-
-}
-
 function toggleShuffle() {
 
   if (!isShuffled) {
@@ -213,6 +163,27 @@ function toggleRepeat() {
 
 }
 
+// Visual functions
+
+function addActiveClass(button) {
+
+  button.classList.add('active');
+
+}
+
+function removeActiveClass(button) {
+
+  button.classList.remove('active');
+
+}
+
+function updateProgressBar() {
+
+  const barWidth = (song.currentTime / song.duration) * 100;
+  progress.style.setProperty('--progress', `${barWidth}%`);
+
+}
+
 function formatTime(secondsWithDecimals) {
 
   const minutes = Math.floor(secondsWithDecimals / 60), 
@@ -234,30 +205,85 @@ function updateSongDuration() {
 
 }
 
-function toggleLike() {
+// Player control elements
+const	play = document.getElementById('play'),
+  previousButton = document.getElementById('previous'),
+  nextButton = document.getElementById('next'),
+  shuffleButton = document.getElementById('shuffle'),
+  repeatButton = document.getElementById('repeat'),
+  progressContainer = document.getElementById('progress-container'),
+  progress = document.getElementById('progress'),
+  likeButton = document.getElementById('like'),
+// Song elements
+  playlistTitleElement = document.getElementById('playlist'),
+  songName = document.getElementById('song-name'),
+  artist = document.getElementById('artist'),
+  song = document.getElementById('song'),
+  cover = document.getElementById('cover'),
+  currentTime = document.getElementById('current-time'),
+  duration = document.getElementById('duration');
+
+// Song state variables
+let isSongPlaying = false;
+
+// Initialize playlist variables
+let songsInfo = {},
+  defaultPlaylist = [],
+  playlist = [],
+  playlistTitle = "",
+  playlistIndex = 0,
+  isShuffled = false,
+  repeat = false;
+
+/////////////////////////////////
+// Initialization function
+/////////////////////////////////
+
+async function init() {
+
+  const storedSongsInfo = localStorage.getItem('songsInfo');
+  
+  if (storedSongsInfo) {
+    
+    songsInfo = JSON.parse(storedSongsInfo);
+
+  } else {
+    
+    const response = await fetch('songs/songs.json');
+    songsInfo = await response.json();
+    localStorage.setItem('songsInfo', JSON.stringify(songsInfo));
+
+  }
+  
+  playlistTitle = songsInfo.playlist.name;
+
+  defaultPlaylist = [
+    songsInfo.nutshell,
+    songsInfo.one_last_breath,
+    songsInfo.the_kids_arent_alright,
+    songsInfo.toxicity,
+    songsInfo.savin_me
+  ];
+
+  playlist = [...defaultPlaylist];
+
+  refreshPlayer();
+
+  // Automatically runned events
+
+  song.addEventListener('loadedmetadata', updateSongDuration);
+  song.addEventListener('timeupdate', updateProgressBar);
+  song.addEventListener('timeupdate', updateSongTime);
+  song.addEventListener('ended', repeatOrNextSong);
+
+  // User interactions
+  play.addEventListener('click', togglePlayPause);
+  previousButton.addEventListener('click', playPreviousSong);
+  nextButton.addEventListener('click', playNextSong);
+  progressContainer.addEventListener('click', jumpToTime);
+  shuffleButton.addEventListener('click', toggleShuffle);
+  repeatButton.addEventListener('click', toggleRepeat);
+
 }
 
-function likeMusic() {
-
-  addActiveClass(likeButton);
-  likeButton.querySelector('i').classList.remove('bi-heart');
-  likeButton.querySelector('i').classList.add('bi-heart-fill');
-
-}
-
-// Automatically runned
-refreshPlayer();
-
-song.addEventListener('loadedmetadata', updateSongDuration);
-song.addEventListener('timeupdate', updateProgressBar);
-song.addEventListener('timeupdate', updateSongTime);
-song.addEventListener('ended', repeatOrNextSong);
-
-// User interactions
-play.addEventListener('click', togglePlayPause);
-previousButton.addEventListener('click', playPreviousSong);
-nextButton.addEventListener('click', playNextSong);
-progressContainer.addEventListener('click', jumpToTime);
-shuffleButton.addEventListener('click', toggleShuffle);
-repeatButton.addEventListener('click', toggleRepeat);
-likeButton.addEventListener('click', likeMusic);
+init();
