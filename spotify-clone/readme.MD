@@ -1,4 +1,4 @@
-# Spotify Copia
+# Spotify Clone
 
 ## Project Overview
 This is an **educational project** created solely for learning purposes. It is a non-profit initiative with no commercial intent whatsoever.
