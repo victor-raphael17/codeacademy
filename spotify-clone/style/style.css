@@ -30,6 +30,21 @@ button:active {
   color: gray;
 }
 
+#playlist-songs-title {
+  margin-top: 2em;
+  font-size: 1.25em;
+  font-weight: bolder;
+}
+
+#player {
+  margin: 5em;
+}
+
+#main-content {
+  display: flex;
+  flex-direction: row;
+}
+
 #below-cover {
   display: flex;
   justify-content: space-between;

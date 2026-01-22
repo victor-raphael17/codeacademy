@@ -1,4 +1,4 @@
-// Define songs objects (temporary hardcoded playlist)
+// Playlist elements
 const nutshell = {
 
   name: 'Nutshell',
@@ -16,8 +16,23 @@ const nutshell = {
   artist: 'The Offspring',
   file: 'the_kids_arent_alright'
 
-}, defaultPlaylist = [nutshell, one_last_breath, the_kids_arent_alright];
+}, toxicity = {
+
+  name: 'Toxicity',
+  artist: 'System Of A Down',
+  file: 'toxicity'
+
+}, savin_me = {
+
+  name: 'Savin\' Me',
+  artist: 'Nickelback',
+  file: 'savin_me'
+
+}, defaultPlaylist = [nutshell, one_last_breath, the_kids_arent_alright, toxicity, savin_me];
+
 let playlist = [...defaultPlaylist];
+
+const playlistSongsContainer = document.getElementById('playlist-songs');
 
 // Song info elements
 const songName = document.getElementById('song-name'),
@@ -165,8 +180,28 @@ function toggleShuffle() {
   }
 }
 
+function nextSongs() {
+
+  for (let i = 1; i < playlist.length; i++) {
+    const songDiv = document.createElement('div');
+    songDiv.classList.add('next-song');
+
+    const songTitle = document.createElement('h2');
+    songTitle.innerText = playlist[i].name;
+    songDiv.appendChild(songTitle);
+
+    const songArtist = document.createElement('p');
+    songArtist.innerText = playlist[i].artist;
+    songDiv.appendChild(songArtist);
+
+    playlistSongsContainer.appendChild(songDiv);
+  }
+
+}
+
 // Automatically runned
 refreshPlayer();
+nextSongs();
 
 play.addEventListener('click', togglePlayPause);
 song.addEventListener('timeupdate', updateProgressBar);
