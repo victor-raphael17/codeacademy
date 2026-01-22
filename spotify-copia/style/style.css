@@ -98,3 +98,7 @@ button:active {
 .navigate {
   font-size: 3em;
 }
+
+.active {
+  color: #1DB954;
+}
