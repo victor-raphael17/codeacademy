@@ -39,6 +39,7 @@ function refreshPlayer() {
   songName.innerText = playlist[playlistIndex].name;
   artist.innerText = playlist[playlistIndex].artist;
   playlistTitleElement.innerText = playlistTitle;
+  likeButtonStyle()
 
 };
 
@@ -163,7 +164,50 @@ function toggleRepeat() {
 
 }
 
+function likeMusic() {
+
+  const music = playlist[playlistIndex];
+
+  if (!music.liked) {
+
+    music.liked = true;
+  
+  } else {
+
+    music.liked = false;
+
+  }
+
+  likeButtonStyle();
+
+  localStorage.setItem('songsInfo', JSON.stringify(defaultPlaylist));
+
+}
+
 // Visual functions
+function likeButtonStyle() {
+
+  const music = playlist[playlistIndex];
+
+  if (music.liked) {
+
+    // Change like button to filled green heart
+    likeButton.querySelector('i').classList.remove('bi-heart');
+    likeButton.querySelector('i').classList.add('bi-heart-fill');
+    likeButton.querySelector('i').classList.remove('low-opacity');
+    addActiveClass(likeButton); 
+
+  } else {
+
+    // Change like button to empty heart
+    likeButton.querySelector('i').classList.remove('bi-heart-fill');
+    likeButton.querySelector('i').classList.add('bi-heart');
+    likeButton.querySelector('i').classList.add('low-opacity');
+    removeActiveClass(likeButton);
+
+  }
+
+}
 
 function addActiveClass(button) {
 
@@ -241,29 +285,28 @@ let songsInfo = {},
 
 async function init() {
 
-  const storedSongsInfo = localStorage.getItem('songsInfo');
-  
-  if (storedSongsInfo) {
-    
-    songsInfo = JSON.parse(storedSongsInfo);
-
-  } else {
-    
-    const response = await fetch('songs/songs.json');
-    songsInfo = await response.json();
-    localStorage.setItem('songsInfo', JSON.stringify(songsInfo));
-
-  }
+  const response = await fetch('songs/songs.json');
+  songsInfo = await response.json();
   
   playlistTitle = songsInfo.playlist.name;
 
-  defaultPlaylist = [
-    songsInfo.nutshell,
-    songsInfo.one_last_breath,
-    songsInfo.the_kids_arent_alright,
-    songsInfo.toxicity,
-    songsInfo.savin_me
-  ];
+  const storedSongs = JSON.parse(localStorage.getItem('songsInfo'));
+
+  if (Array.isArray(storedSongs)) {
+
+    defaultPlaylist = storedSongs;
+
+  } else {
+
+    defaultPlaylist = [
+      songsInfo.nutshell,
+      songsInfo.one_last_breath,
+      songsInfo.the_kids_arent_alright,
+      songsInfo.toxicity,
+      songsInfo.savin_me
+    ];
+
+  }
 
   playlist = [...defaultPlaylist];
 
@@ -283,6 +326,7 @@ async function init() {
   progressContainer.addEventListener('click', jumpToTime);
   shuffleButton.addEventListener('click', toggleShuffle);
   repeatButton.addEventListener('click', toggleRepeat);
+  likeButton.addEventListener('click', likeMusic);
 
 }
 
