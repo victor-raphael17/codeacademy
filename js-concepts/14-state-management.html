@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>State Management</title>
+</head>
+<body>
+    <h1>Contador</h1>
+    <button id="dec">-</button>
+    <span id="contador">0</span>
+    <button id="inc">+</button>
+
+    <h2>Todo List</h2>
+    <input id="todoInput" placeholder="Nova tarefa">
+    <button id="addTodo">Adicionar</button>
+    <ul id="lista"></ul>
+
+    <script>
+        // Estado
+        let state = {
+            contador: 0,
+            todos: []
+        }
+
+        // Contador
+        function renderContador() {
+            document.querySelector("#contador").textContent = state.contador
+        }
+
+        document.querySelector("#inc").addEventListener("click", () => {
+            state.contador++
+            renderContador()
+        })
+
+        document.querySelector("#dec").addEventListener("click", () => {
+            state.contador--
+            renderContador()
+        })
+
+        // Todo List
+        function renderTodos() {
+            document.querySelector("#lista").innerHTML = state.todos
+                .map((todo, i) => `<li>${todo} <button onclick="removeTodo(${i})">x</button></li>`)
+                .join("")
+        }
+
+        document.querySelector("#addTodo").addEventListener("click", () => {
+            let input = document.querySelector("#todoInput")
+            if (input.value) {
+                state.todos.push(input.value)
+                input.value = ""
+                renderTodos()
+            }
+        })
+
+        function removeTodo(index) {
+            state.todos.splice(index, 1)
+            renderTodos()
+        }
+    </script>
+</body>
+</html>
