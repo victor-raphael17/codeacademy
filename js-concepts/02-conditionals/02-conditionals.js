@@ -64,6 +64,8 @@ switch (dia) {
         console.log("Início da semana")
         break
     case "sexta":
+    case "sábado":
+    case "domingo":
         console.log("Fim da semana")
         break
     default:
