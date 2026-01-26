@@ -21,7 +21,7 @@ let indefinido = undefined // undefined (valor não definido)
 
 function exemploEscopo() {
 
-  let escopoFuncao = "função" // escopo de função
+  let escopoFuncao = "scoped" // escopo de função
 
     if (true) {
         let blocoLet = "bloco" // escopo de bloco
