@@ -18,19 +18,18 @@ let indefinido = undefined // undefined (valor não definido)
 
 // Scope
 
-var globalVar = "global" // escopo global
 
 function exemploEscopo() {
-    var funcaoVar = "função" // escopo de função
+
+  let escopoFuncao = "função" // escopo de função
 
     if (true) {
         let blocoLet = "bloco" // escopo de bloco
         const blocoConst = "bloco" // escopo de bloco
-        var funcaoVar2 = "função" // var ignora bloco, vai pra função
     }
 
     // blocoLet não existe aqui (erro)
-    // funcaoVar2 existe aqui (var não respeita bloco)
+    // blocoConst não existe aqui (erro)
 }
 
-// funcaoVar não existe aqui (erro)
+// a variável escopoFuncao não existe aqui
